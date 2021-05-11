@@ -19,7 +19,7 @@ public interface AzureFormPanel<T> extends AzureForm<T> {
 
     @Override
     default T getData() {
-        throw new AzureToolkitRuntimeException("method not implemeted");
+        throw new AzureToolkitRuntimeException("method not implemented");
     }
 
     @Override

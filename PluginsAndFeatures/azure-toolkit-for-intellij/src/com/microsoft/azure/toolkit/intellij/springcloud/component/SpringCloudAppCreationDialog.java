@@ -64,7 +64,7 @@ public class SpringCloudAppCreationDialog extends AzureDialog<SpringCloudAppEnti
 
     @Override
     public SpringCloudAppEntity getData() {
-        return SpringCloudAppEntity.fromName(this.textName.getValue(), this.cluster.entity());
+        return new SpringCloudAppEntity(this.textName.getValue(), this.cluster.entity());
     }
 
     @Override

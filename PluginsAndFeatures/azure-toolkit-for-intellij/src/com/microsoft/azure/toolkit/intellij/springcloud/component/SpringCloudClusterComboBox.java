@@ -5,7 +5,6 @@
 
 package com.microsoft.azure.toolkit.intellij.springcloud.component;
 
-import com.microsoft.azure.management.resources.Subscription;
 import com.microsoft.azure.toolkit.intellij.common.AzureComboBox;
 import com.microsoft.azure.toolkit.lib.Azure;
 import com.microsoft.azure.toolkit.lib.common.operation.AzureOperation;
@@ -19,7 +18,7 @@ import java.util.Objects;
 
 public class SpringCloudClusterComboBox extends AzureComboBox<SpringCloudCluster> {
 
-    private Subscription subscription;
+    private String subscriptionId;
 
     @Override
     protected String getItemText(final Object item) {
@@ -29,12 +28,12 @@ public class SpringCloudClusterComboBox extends AzureComboBox<SpringCloudCluster
         return ((SpringCloudCluster) item).name();
     }
 
-    public void setSubscription(Subscription subscription) {
-        if (Objects.equals(subscription, this.subscription)) {
+    public void setSubscription(String subscriptionId) {
+        if (Objects.equals(subscriptionId, this.subscriptionId)) {
             return;
         }
-        this.subscription = subscription;
-        if (subscription == null) {
+        this.subscriptionId = subscriptionId;
+        if (subscriptionId == null) {
             this.clear();
             return;
         }
@@ -49,8 +48,8 @@ public class SpringCloudClusterComboBox extends AzureComboBox<SpringCloudCluster
         type = AzureOperation.Type.SERVICE
     )
     protected List<? extends SpringCloudCluster> loadItems() throws Exception {
-        if (Objects.nonNull(this.subscription)) {
-            final String sid = this.subscription.subscriptionId();
+        if (Objects.nonNull(this.subscriptionId)) {
+            final String sid = this.subscriptionId;
             final AzureSpringCloud az = Azure.az(AzureSpringCloud.class);
             return az.clusters();
         }

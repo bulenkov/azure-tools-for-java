@@ -99,7 +99,7 @@ public class AzurePlugin implements StartupActivity.DumbAware {
         this.installationID = StringUtils.isNotEmpty(hasMac) ? hasMac : GetHashMac.hash(PermanentInstallationID.get());
         final String userAgent = String.format(USER_AGENT, PLUGIN_VERSION,
                 TelemetryUtils.getMachieId(dataFile, message("prefVal"), message("instID")));
-        Azure.az().config().setLogLevel(LogLevel.NONE);
+        Azure.az().config().setLogLevel(LogLevel.NONE.name());
         Azure.az().config().setUserAgent(userAgent);
         CommonSettings.setUserAgent(userAgent);
 

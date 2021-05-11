@@ -1,11 +1,15 @@
 package com.microsoft.azure.toolkit.intellij.springcloud.properties;
 
+import com.azure.resourcemanager.resources.fluentcore.arm.ResourceId;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.microsoft.azure.toolkit.lib.Azure;
+import com.microsoft.azure.toolkit.lib.springcloud.AzureSpringCloud;
+import com.microsoft.azure.toolkit.lib.springcloud.SpringCloudApp;
 import com.microsoft.intellij.helpers.UIHelperImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +26,9 @@ public class SpringCloudAppPropertiesEditorProvider implements FileEditorProvide
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile virtualFile) {
         final String clusterId = virtualFile.getUserData(UIHelperImpl.CLUSTER_ID);
-        final String appId = virtualFile.getUserData(UIHelperImpl.APP_ID);
-        return new SpringCloudAppPropertiesEditor(project, clusterId, appId);
+        final ResourceId appId = ResourceId.fromString(virtualFile.getUserData(UIHelperImpl.APP_ID));
+        final SpringCloudApp app = Azure.az(AzureSpringCloud.class).subscription(appId.subscriptionId()).cluster(appId.parent().name()).app(appId.name());
+        return new SpringCloudAppPropertiesEditor(project, app);
     }
 
     @NotNull

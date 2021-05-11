@@ -78,7 +78,7 @@ public class SpringCloudDeploymentConfigurationPanel extends JPanel implements A
         this.selectorArtifact.setFileFilter(virtualFile -> StringUtils.equalsIgnoreCase("jar", FileNameUtils.getExtension(virtualFile.getPath())));
         this.selectorArtifact.addItemListener(this::onArtifactChanged);
         this.selectorSubscription.addItemListener(this::onSubscriptionChanged);
-        this.selectorCluster.addItemListener(this::onClusterChanger);
+        this.selectorCluster.addItemListener(this::onClusterChanged);
         this.selectorSubscription.setRequired(true);
         this.selectorCluster.setRequired(true);
         this.selectorApp.setRequired(true);
@@ -106,11 +106,11 @@ public class SpringCloudDeploymentConfigurationPanel extends JPanel implements A
     private void onSubscriptionChanged(final ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED) {
             final Subscription subscription = (Subscription) e.getItem();
-            this.selectorCluster.setSubscription(subscription);
+            this.selectorCluster.setSubscription(subscription.subscriptionId());
         }
     }
 
-    private void onClusterChanger(final ItemEvent e) {
+    private void onClusterChanged(final ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED) {
             final SpringCloudCluster cluster = (SpringCloudCluster) e.getItem();
             this.selectorApp.setCluster(cluster);

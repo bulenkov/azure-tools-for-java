@@ -62,7 +62,7 @@ public class SpringCloudAppComboBox extends AzureComboBox<SpringCloudApp> {
         if (Objects.nonNull(this.cluster)) {
             if (CollectionUtils.isNotEmpty(this.localItems)) {
                 apps.addAll(this.localItems.stream()
-                    .filter(i -> Objects.equals(this.cluster.name(), i.cluster().name()))
+                    .filter(i -> Objects.equals(this.cluster.name(), i.getCluster().name()))
                     .collect(Collectors.toList()));
             }
             apps.addAll(cluster.apps());

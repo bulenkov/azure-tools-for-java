@@ -40,6 +40,7 @@ import javax.swing.event.DocumentEvent;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWithBrowseButton
         implements UserActivityProviderComponent {
@@ -50,8 +51,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
         super();
         addActionListener(e -> {
             if (this.isEditable()) {
-                final EnvironmentVariablesEditDialog variablesDialog = new EnvironmentVariablesEditDialog(
-                        getEnvironmentVariables());
+                final EnvironmentVariablesEditDialog variablesDialog = new EnvironmentVariablesEditDialog(getEnvironmentVariables());
                 if (variablesDialog.showAndGet()) {
                     //set text
                     final Map<String, String> newEnvironmentVariables = variablesDialog.getEnvironmentVariables();
@@ -78,7 +78,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
         return EnvVariablesTable.parseEnvsFromText(getText());
     }
 
-    public void setEnvironmentVariables(Map<String, String> environmentVariables) {
+    public void setEnvironmentVariables(@Nullable Map<String, String> environmentVariables) {
         this.environmentVariables = environmentVariables;
         this.setText(stringifyEnvs(environmentVariables));
     }
@@ -96,12 +96,12 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
     }
 
     @NotNull
-    private static String stringifyEnvs(@NotNull Map<String, String> envs) {
-        if (envs.isEmpty()) {
+    private static String stringifyEnvs(@Nullable Map<String, String> envs) {
+        if (Objects.isNull(envs) || envs.isEmpty()) {
             return "";
         }
-        StringBuilder buf = new StringBuilder();
-        for (Map.Entry<String, String> entry : envs.entrySet()) {
+        final StringBuilder buf = new StringBuilder();
+        for (final Map.Entry<String, String> entry : envs.entrySet()) {
             if (buf.length() > 0) {
                 buf.append(";");
             }
@@ -123,7 +123,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
     }
 
     private void fireStateChanged() {
-        for (ChangeListener listener : myListeners) {
+        for (final ChangeListener listener : myListeners) {
             listener.stateChanged(new ChangeEvent(this));
         }
     }
@@ -138,14 +138,14 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
             environmentVariableTable = new EnvironmentVariableTable();
             environmentVariableTable.setEnv(environmentVariables);
 
-            JLabel label = new JLabel("Environment variables:");
+            final JLabel label = new JLabel("Environment variables:");
             label.setLabelFor(environmentVariableTable.getTableView().getComponent());
 
             pnlRoot = new JPanel(new MigLayout("fill, ins 0, gap 0, hidemode 3"));
             pnlRoot.add(label, "hmax pref, wrap");
             pnlRoot.add(environmentVariableTable.getComponent(), "push, grow, wrap, gaptop 5");
 
-            setTitle("Set environment variables for spring cloud app");
+            setTitle("Set Environment Variables for Spring Cloud App");
             init();
         }
 
@@ -162,9 +162,9 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
         @Nullable
         @Override
         protected ValidationInfo doValidate() {
-            for (EnvironmentVariable variable : environmentVariableTable.getEnvironmentVariables()) {
-                String name = variable.getName();
-                String value = variable.getValue();
+            for (final EnvironmentVariable variable : environmentVariableTable.getEnvironmentVariables()) {
+                final String name = variable.getName();
+                final String value = variable.getValue();
                 if (StringUtil.isEmpty(name) && StringUtil.isEmpty(value)) {
                     continue;
                 }
